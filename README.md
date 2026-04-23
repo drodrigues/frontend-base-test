@@ -201,7 +201,7 @@ No mobile, prefira unidades relativas à viewport (`vw`, `vh`, `dvh`) para que o
 
   @include respond-to($desktop) {
     padding: rem(16) rem(24); // desktop — valor fixo
-    font-size: rem(14);
+    @include font-size(14);
   }
 }
 ```
