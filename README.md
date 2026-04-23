@@ -196,7 +196,7 @@ No mobile, prefira unidades relativas à viewport (`vw`, `vh`, `dvh`) para que o
   }
 
   &__price {
-    color: var(--primary);
+    color: $primary;
   }
 
   @include respond-to($desktop) {
@@ -233,16 +233,16 @@ Estilos base sempre para mobile. Use `$desktop` para sobrescrever em telas maior
 
 **Breakpoints disponíveis:** `mobile`, `mobileHorizontal`, `tablet`, `desktop`, `not-desktop`
 
-**Variáveis de tema (CSS custom properties):**
+**Variáveis de tema (SCSS):**
 
 ```scss
-var(--primary)     // #0C2AF1
-var(--secondary)   // #dfdfdf
-var(--background)  // #fff
-var(--black)       // #000
-var(--success)     // #47bc00
-var(--error)       // #FF1334
-var(--warning)     // #ffaa00
+$primary     // #0C2AF1
+$secondary   // #dfdfdf
+$background  // #fff
+$black       // #000
+$success     // #47bc00
+$error       // #FF1334
+$warning     // #ffaa00
 ```
 
 ---
