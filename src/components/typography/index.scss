@@ -1,0 +1,139 @@
+.Typography {
+  position: relative;
+  font-family: $font-poppins;
+  margin: 0;
+  padding: 0;
+
+  a {
+    color: inherit;
+    text-decoration: underline;
+
+    &:hover {
+      color: $secondary;
+    }
+  }
+
+  &--p {
+    a {
+      text-decoration: underline !important;
+      cursor: pointer;
+    }
+  }
+
+  &--h1,
+  &--h2,
+  &--h3 {
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  &--poppins {
+    font-family: $font-poppins;
+  }
+
+  &--address {
+    font-style: normal;
+    line-height: 140%;
+  }
+
+  &--thin {
+    font-weight: 100;
+  }
+
+  &--extra-light {
+    font-weight: 200;
+  }
+
+  &--light {
+    font-weight: 300;
+  }
+
+  &--regular {
+    font-weight: 400;
+  }
+
+  &--medium {
+    font-weight: 500;
+  }
+
+  &--semi-bold {
+    font-weight: 600;
+  }
+
+  &--bold {
+    font-weight: 700;
+  }
+
+  &--extra-bold {
+    font-weight: 800;
+  }
+
+  &--primary {
+    color: $primary;
+  }
+
+  &--secondary {
+    color: $secondary;
+  }
+
+  &--black {
+    color: $black;
+  }
+
+  &--white {
+    color: $white;
+  }
+
+  &--success {
+    color: $success;
+  }
+
+  &--error {
+    color: $error;
+  }
+
+  &--warning {
+    color: $warning;
+  }
+
+  &--info {
+    color: $info;
+  }
+
+  @each $size in $sizes {
+    &--size-#{$size} {
+      line-height: 130%;
+      @include font-size($size);
+    }
+  }
+
+  @each $size in $sizes {
+    &--size-desktop-#{$size} {
+      @include respond-to($desktop) {
+        line-height: 130%;
+        @include font-size($size);
+      }
+    }
+  }
+
+  &--uppercase {
+    text-transform: uppercase;
+  }
+
+  &--lowercase {
+    text-transform: lowercase;
+  }
+
+  &--left {
+    text-align: left;
+  }
+
+  &--right {
+    text-align: right;
+  }
+
+  &--center {
+    text-align: center;
+  }
+}

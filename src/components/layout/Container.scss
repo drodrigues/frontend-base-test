@@ -1,0 +1,21 @@
+.LayoutContainer {
+  padding: dvh(4) vw(4);
+
+  @include respond-to($desktop) {
+    padding: px(32) px(16);
+  }
+
+  &__content {
+    margin: auto;
+    width: 100%;
+    max-width: px(1200);
+
+    &--narrow {
+      max-width: px(1120);
+    }
+
+    &--full {
+      max-width: 100%;
+    }
+  }
+}

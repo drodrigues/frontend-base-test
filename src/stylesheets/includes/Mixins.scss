@@ -1,0 +1,104 @@
+@use 'sass:math';
+@use 'sass:list';
+
+@use 'Variables' as *;
+
+$mobile: '(max-width: 991px)';
+$mobileHorizontal: '(min-width: 576px) and (max-width: 767.98px)';
+$tablet: '(min-width: 768px) and (max-width: 991.98px)';
+$desktop: '(min-width: 768px)';
+$not-desktop: '(max-width: 767px)';
+
+$base-pixel-size: 16;
+
+@function generate-sizes($start, $end, $sizes: ()) {
+  @for $i from $start through $end {
+    $sizes: list.append($sizes, $i);
+  }
+
+  @return $sizes;
+}
+
+$sizes: generate-sizes(10, 60);
+
+@mixin respond-to($media) {
+  @media only screen and #{$media} {
+    @content;
+  }
+}
+
+@function vw($value) {
+  @return #{($value)}vw;
+}
+
+@function vh($value) {
+  @return #{($value)}vh;
+}
+
+@function dvh($value) {
+  @return #{($value)}dvh;
+}
+
+@function px($value) {
+  @return #{($value)}px;
+}
+
+@function rem($pxValue) {
+  @return math.div($pxValue, $base-pixel-size) * 1rem;
+}
+
+@function fluid-clamp($min, $max, $min-vw: 360px, $max-vw: 1440px) {
+  $slope: math.div(($max - $min), ($max-vw - $min-vw));
+  $intercept: $min - ($slope * $min-vw);
+
+  @return clamp(#{$min}, calc(#{$intercept} + #{($slope * 100)}vw), #{$max});
+}
+
+@mixin font-size($target) {
+  font-size: vw(math.div($target, 4));
+
+  @include respond-to($desktop) {
+    $min-scale: 0.65;
+    $max: $target * 1px;
+    $min: (
+      $target * $min-scale) * 1px;
+
+    font-size: fluid-clamp($min, $max
+    );
+}
+}
+
+@mixin scrollbar($width: px(10),
+  $trackColor: $gray-light,
+  $thumbColor: $primary) {
+  &::-webkit-scrollbar {
+    background: $trackColor;
+    width: $width;
+  }
+
+  &::-webkit-scrollbar:vertical {
+    background: $trackColor;
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $trackColor;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumbColor;
+    border-radius: calc(infinity * 1px);
+  }
+
+  &::-moz-scrollbar {
+    width: $width;
+  }
+
+  &::-moz-scrollbar-track {
+    background: $trackColor;
+  }
+
+  &::-moz-scrollbar-thumb {
+    background: $thumbColor;
+  }
+}
