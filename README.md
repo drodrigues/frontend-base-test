@@ -180,6 +180,7 @@ O projeto usa **SCSS puro** (sem CSS Modules nem Tailwind).
 | `dvh($px)`                | Altura dinâmica de viewport (mobile base) |
 | `rem($px)`                | Unidade fixa relativa ao root (desktop)   |
 | `fluid-clamp($min, $max)` | Escalonamento fluido entre breakpoints    |
+| `font-size($px)`          | Tamanho de fonte responsivo               |
 
 **Uso de unidades por contexto:**
 
@@ -188,7 +189,7 @@ No mobile, prefira unidades relativas à viewport (`vw`, `vh`, `dvh`) para que o
 ```scss
 .ProductCard {
   padding: dvh(2) vw(4); // mobile — proporcional à viewport
-  font-size: vw(3.5); // mobile — escala com a tela
+  @include font-size(12); // mobile — escala com a tela
 
   &__title {
     font-weight: 600;
