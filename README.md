@@ -25,6 +25,7 @@ O projeto base já está configurado com Next.js, TypeScript, SCSS e Zustand. Se
 - **SCSS com padrão BEM** para todos os estilos — sem CSS-in-JS, sem Tailwind
 - **Zustand** para gerenciar os dados da aplicação (lista de produtos, termo de busca, estado de carregamento)
 - **Grid responsivo** para a listagem de produtos, adaptado para mobile, tablet e desktop conforme o Figma
+- **Mobile first** — estilos base escritos para mobile, breakpoints adicionam comportamento para telas maiores
 
 ## Entrega
 
@@ -170,10 +171,24 @@ import Container from '../../../components/layout';
 
 O projeto usa **SCSS puro** (sem CSS Modules nem Tailwind).
 
+**Funções SCSS disponíveis:**
+
+| Função                    | Uso                                       |
+| ------------------------- | ----------------------------------------- |
+| `vw($px)`                 | Largura relativa à viewport (mobile base) |
+| `vh($px)`                 | Altura relativa à viewport (mobile base)  |
+| `dvh($px)`                | Altura dinâmica de viewport (mobile base) |
+| `rem($px)`                | Unidade fixa relativa ao root (desktop)   |
+| `fluid-clamp($min, $max)` | Escalonamento fluido entre breakpoints    |
+
+**Uso de unidades por contexto:**
+
+No mobile, prefira unidades relativas à viewport (`vw`, `vh`, `dvh`) para que o layout escale proporcionalmente em qualquer tamanho de tela. No desktop, use `rem` ou `fluid-clamp` para valores fixos e tipografia fluida.
+
 ```scss
 .ProductCard {
-  padding: rem(16);
-  font-size: rem(14);
+  padding: dvh(2) vw(4); // mobile — proporcional à viewport
+  font-size: vw(3.5); // mobile — escala com a tela
 
   &__title {
     font-weight: 600;
@@ -182,26 +197,34 @@ O projeto usa **SCSS puro** (sem CSS Modules nem Tailwind).
   &__price {
     color: var(--primary);
   }
+
+  @include respond-to($desktop) {
+    padding: rem(16) rem(24); // desktop — valor fixo
+    font-size: rem(14);
+  }
 }
 ```
 
-**Funções SCSS disponíveis:**
+**Mixin de responsividade — Mobile First:**
 
-| Função                    | Uso                               |
-| ------------------------- | --------------------------------- |
-| `rem($px)`                | Converte px para rem              |
-| `vw($px)`                 | Converte px para vw (base 1440px) |
-| `vh($px)`                 | Converte px para vh               |
-| `fluid-clamp($min, $max)` | Escalonamento fluido responsivo   |
-
-**Mixin de responsividade:**
+Estilos base sempre para mobile. Use `$desktop` para sobrescrever em telas maiores. Nunca use `$mobile` para "desfazer" estilos de desktop.
 
 ```scss
+// ✅ Correto — mobile first
 .ProductGrid {
   display: grid;
+  grid-template-columns: repeat(2, 1fr); // mobile base
+
+  @include respond-to($desktop) {
+    grid-template-columns: repeat(4, 1fr); // desktop override
+  }
+}
+
+// ❌ Evitar — desktop first
+.ProductGrid {
   grid-template-columns: repeat(4, 1fr);
 
-  @include respond-to(mobile) {
+  @include respond-to($mobile) {
     grid-template-columns: repeat(2, 1fr);
   }
 }
