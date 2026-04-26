@@ -254,6 +254,7 @@ As chamadas HTTP são encapsuladas em **classes de serviço estáticas**, defini
 ```
 src/domains/
 └── product/
+    |-- ProductStore.ts 
     ├── ProductService.ts   # chamadas HTTP do domínio
     └── types.ts            # tipos/interfaces do domínio
 ```
@@ -278,16 +279,8 @@ export class ProductService {
 }
 ```
 
-O serviço é consumido nos hooks da feature, nunca diretamente em componentes:
+O serviço é consumido nos store, nunca diretamente em componentes.
 
-```typescript
-// src/features/products/useProducts.ts
-import { ProductService } from '@/domains/product/ProductService';
-
-export function useProducts() {
-  // chama ProductService.list() e alimenta a store Zustand
-}
-```
 
 A API de produtos está documentada em [dummyjson.com/docs/products](https://dummyjson.com/docs/products).
 
@@ -307,7 +300,7 @@ GET https://dummyjson.com/products/categories            # Categorias
 O projeto tem **Zustand** instalado. Para criar uma store:
 
 ```typescript
-// src/features/products/ProductStore.ts
+// src/domains/products/ProductStore.ts
 import { create } from 'zustand';
 
 type ProductsStore = {
