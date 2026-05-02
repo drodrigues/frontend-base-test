@@ -1,17 +1,37 @@
 .LayoutContainer {
+  width: 100%;
+  min-height: 100vh;
   padding: dvh(4) vw(4);
 
   @include respond-to($desktop) {
-    padding: px(32) px(16);
+    padding: rem(32) rem(16);
+  }
+
+  &--main {
+    display: flex;
+    padding: 0 rem(12);
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    align-self: stretch;
+    background: $figma-surface;
+
+    @include respond-to($desktop) {
+      padding: 0 rem(35);
+      align-items: center;
+    }
   }
 
   &__content {
-    margin: auto;
     width: 100%;
-    max-width: px(1200);
+    max-width: rem(448);
+
+    @include respond-to($desktop) {
+      max-width: none;
+    }
 
     &--narrow {
-      max-width: px(1120);
+      max-width: rem(1120);
     }
 
     &--full {

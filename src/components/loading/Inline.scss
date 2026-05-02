@@ -11,15 +11,19 @@
   z-index: 10;
 
   &__progress {
-    height: px(3);
-    width: px(104);
+    height: vw(3);
+    width: vw(104);
     background:
-      linear-gradient(to right, $primary, $primary),
-      linear-gradient(to right, $primary, $primary),
+      linear-gradient(to right, $primary, $primary), linear-gradient(to right, $primary, $primary),
       $secondary;
     background-size: 60% 100%;
     background-repeat: no-repeat;
-    animation: progress 1.8 infinite;
+    animation: progress 1.8s infinite;
+
+    @include respond-to($desktop) {
+      height: rem(3);
+      width: rem(104);
+    }
   }
 
   @keyframes progress {

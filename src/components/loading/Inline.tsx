@@ -10,9 +10,9 @@ const LoadingInline = ({ visible }: Props): JSX.Element | null => {
   if (!visible) return null;
 
   return (
-    <div className='LoadingInline'>
-      <div className='LoadingInline__progress' />
-    </div>
+    <span className="LoadingInline">
+      <span className="LoadingInline__progress" />
+    </span>
   );
 };
 

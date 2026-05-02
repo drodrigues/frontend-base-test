@@ -1,8 +1,15 @@
 .Typography {
   position: relative;
-  font-family: $font-poppins;
+  font-family: $font-inter;
   margin: 0;
   padding: 0;
+  font-size: var(--typography-size);
+  line-height: var(--typography-line-height);
+
+  @include respond-to($desktop) {
+    font-size: var(--typography-size-desktop, var(--typography-size));
+    line-height: var(--typography-line-height-desktop, var(--typography-line-height));
+  }
 
   a {
     color: inherit;
@@ -30,6 +37,10 @@
 
   &--poppins {
     font-family: $font-poppins;
+  }
+
+  &--inter {
+    font-family: $font-inter;
   }
 
   &--address {
@@ -101,20 +112,20 @@
     color: $info;
   }
 
-  @each $size in $sizes {
-    &--size-#{$size} {
-      line-height: 130%;
-      @include font-size($size);
-    }
+  &--figma-text-primary {
+    color: $figma-text-primary;
   }
 
-  @each $size in $sizes {
-    &--size-desktop-#{$size} {
-      @include respond-to($desktop) {
-        line-height: 130%;
-        @include font-size($size);
-      }
-    }
+  &--figma-text-body {
+    color: $figma-text-body;
+  }
+
+  &--figma-text-muted {
+    color: $figma-text-muted;
+  }
+
+  &--figma-price {
+    color: $figma-price;
   }
 
   &--uppercase {
