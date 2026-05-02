@@ -1,10 +1,20 @@
 @use '../Themes' as *;
 
 $font-poppins: var(--font-poppins);
+$font-inter: var(--font-inter);
 
 $background: var(--background);
 $primary: var(--primary);
 $secondary: var(--secondary);
+$figma-surface: var(--figma-surface);
+$figma-image-surface: var(--figma-image-surface);
+$figma-text-primary: var(--figma-text-primary);
+$figma-border: var(--figma-border);
+$figma-icon-muted: var(--figma-icon-muted);
+$figma-text-body: var(--figma-text-body);
+$figma-text-muted: var(--figma-text-muted);
+$figma-price: var(--figma-price);
+$figma-badge: var(--figma-badge);
 $black: var(--black);
 $white: var(--white);
 $success: var(--success);
