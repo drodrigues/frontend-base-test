@@ -1,0 +1,142 @@
+@use '@/stylesheets/includes/Mixins' as *;
+@use '@/stylesheets/includes/Variables' as *;
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+%skeleton-pulse {
+  background: linear-gradient(90deg, $secondary 25%, $figma-surface 50%, $secondary 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s ease infinite;
+  border-radius: rem(4);
+}
+
+.ProductCardSkeleton {
+  display: flex;
+  width: rem(206);
+  height: rem(350);
+  flex-direction: column;
+  align-items: flex-start;
+  background: $background;
+  border-radius: rem(10);
+  box-shadow:
+    0 rem(4) rem(6) rem(-1) rgba(0, 0, 0, 0.1),
+    0 rem(2) rem(4) rem(-2) rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+
+  @include respond-to($desktop) {
+    width: rem(294);
+    height: auto;
+  }
+
+  &__image {
+    @extend %skeleton-pulse;
+    width: rem(206);
+    height: rem(206);
+    border-radius: 0;
+
+    @include respond-to($desktop) {
+      width: rem(294);
+      height: rem(294);
+    }
+
+  }
+
+  &__body {
+    position: relative;
+    height: rem(144);
+    padding: 0;
+    flex-shrink: 0;
+    align-self: stretch;
+
+    @include respond-to($desktop) {
+      position: static;
+      display: flex;
+      flex-direction: column;
+      height: auto;
+      min-height: rem(240);
+      padding: rem(16);
+    }
+  }
+
+  &__line {
+    @extend %skeleton-pulse;
+    height: rem(16);
+    width: 100%;
+
+    &--short {
+      position: absolute;
+      top: rem(10);
+      left: rem(10);
+      width: 40%;
+
+      @include respond-to($desktop) {
+        position: static;
+      }
+    }
+
+    &--medium {
+      display: none;
+
+      @include respond-to($desktop) {
+        display: block;
+        width: 70%;
+        height: rem(40);
+        margin-top: rem(8);
+        border-radius: rem(4);
+      }
+    }
+
+    &--price {
+      position: absolute;
+      top: rem(106);
+      left: rem(10);
+      width: 55%;
+      height: rem(28);
+
+      @include respond-to($desktop) {
+        position: static;
+        height: rem(24);
+        margin-top: rem(12);
+      }
+    }
+
+    &:nth-child(2) {
+      position: absolute;
+      top: rem(38);
+      left: rem(10);
+      width: rem(186);
+      height: rem(40);
+
+      @include respond-to($desktop) {
+        position: static;
+        width: 100%;
+        height: rem(48);
+        margin-top: rem(8);
+      }
+
+    }
+
+    &:nth-child(4) {
+      position: absolute;
+      top: rem(82);
+      left: rem(10);
+      width: rem(80);
+      height: rem(16);
+
+      @include respond-to($desktop) {
+        position: static;
+        width: 100%;
+        height: rem(24);
+        margin-top: rem(12);
+      }
+    }
+  }
+}
