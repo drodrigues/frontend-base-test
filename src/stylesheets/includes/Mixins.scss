@@ -4,9 +4,11 @@
 @use 'Variables' as *;
 
 $mobile: '(max-width: 991px)';
+$mobile-wide: '(min-width: 448px)';
 $mobileHorizontal: '(min-width: 576px) and (max-width: 767.98px)';
 $tablet: '(min-width: 768px) and (max-width: 991.98px)';
 $desktop: '(min-width: 768px)';
+$desktop-wide: '(min-width: 1200px)';
 $not-desktop: '(max-width: 767px)';
 
 $base-pixel-size: 16;
@@ -60,17 +62,13 @@ $sizes: generate-sizes(10, 60);
   @include respond-to($desktop) {
     $min-scale: 0.65;
     $max: $target * 1px;
-    $min: (
-      $target * $min-scale) * 1px;
+    $min: ($target * $min-scale) * 1px;
 
-    font-size: fluid-clamp($min, $max
-    );
-}
+    font-size: fluid-clamp($min, $max);
+  }
 }
 
-@mixin scrollbar($width: px(10),
-  $trackColor: $gray-light,
-  $thumbColor: $primary) {
+@mixin scrollbar($width: px(10), $trackColor: $secondary, $thumbColor: $primary) {
   &::-webkit-scrollbar {
     background: $trackColor;
     width: $width;

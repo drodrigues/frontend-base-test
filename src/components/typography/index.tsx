@@ -1,12 +1,19 @@
 import LoadingInline from '@/components/loading/Inline';
 
 import classNames from 'classnames';
-import React, { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
 
 import './index.scss';
 
+type TypographyStyle = CSSProperties & {
+  '--typography-size'?: string;
+  '--typography-size-desktop'?: string;
+  '--typography-line-height'?: string;
+  '--typography-line-height-desktop'?: string;
+};
+
 interface Props {
-  font?: 'poppins';
+  font?: 'poppins' | 'inter';
   type:
     | 'h1'
     | 'h2'
@@ -29,23 +36,41 @@ interface Props {
     | 'semi-bold'
     | 'bold'
     | 'extra-bold';
-  color?: 'primary' | 'secondary' | 'black' | 'white' | 'success' | 'error' | 'warning' | 'info';
+  color?:
+    | 'primary'
+    | 'secondary'
+    | 'black'
+    | 'white'
+    | 'success'
+    | 'error'
+    | 'warning'
+    | 'info'
+    | 'figma-text-primary'
+    | 'figma-text-body'
+    | 'figma-text-muted'
+    | 'figma-price';
   transform?: 'uppercase' | 'lowercase' | 'default';
   align?: 'inherit' | 'left' | 'right' | 'center';
   size?: number;
+  lineHeight?: number;
   sizeDesktop?: number;
+  lineHeightDesktop?: number;
   className?: string;
   children?: ReactNode;
   isLoading?: boolean;
 }
 
+const toRem = (value?: number) => (typeof value === 'number' ? `${value / 16}rem` : undefined);
+
 const Typography = ({
-  font = 'poppins',
+  font = 'inter',
   type,
   className,
   transform,
   size,
   sizeDesktop,
+  lineHeight,
+  lineHeightDesktop,
   children,
   align = 'inherit',
   weight = 'regular',
@@ -57,16 +82,26 @@ const Typography = ({
   const classes = classNames('Typography', className, {
     [`Typography--${font}`]: !!font,
     [`Typography--${type}`]: !!type,
-    [`Typography--${transform}`]: !!transform,
-    [`Typography--${align}`]: !!align,
+    [`Typography--${transform}`]: !!transform && transform !== 'default',
+    [`Typography--${align}`]: !!align && align !== 'inherit',
     [`Typography--${weight}`]: !!weight,
     [`Typography--${color}`]: !!color,
     [`Typography--size-${size}`]: !!size,
     [`Typography--size-desktop-${sizeDesktop}`]: !!sizeDesktop,
+    [`Typography--line-height-${lineHeight}`]: !!lineHeight,
+    [`Typography--line-height-desktop-${lineHeightDesktop}`]: !!lineHeightDesktop,
   });
 
+  // Adjustment to match Figma, where line-heights vary between styles.
+  const style: TypographyStyle = {
+    '--typography-size': toRem(size),
+    '--typography-size-desktop': toRem(sizeDesktop),
+    '--typography-line-height': toRem(lineHeight),
+    '--typography-line-height-desktop': toRem(lineHeightDesktop),
+  };
+
   return (
-    <TypographyComponent className={classes}>
+    <TypographyComponent className={classes} style={style}>
       {children}
       <LoadingInline visible={isLoading} />
     </TypographyComponent>

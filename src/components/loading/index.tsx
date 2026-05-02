@@ -19,10 +19,11 @@ const Loading = ({ visible = true, overlay, fitToParent, children }: Props) => {
         'Loading--overlay': overlay,
         'Loading--fit-parent': fitToParent,
       })}
-      role='status'
-      aria-live='polite'
-      aria-label='Carregando'>
-      <span className='Loading__spinner' aria-hidden='true'></span>
+      role="status"
+      aria-live="polite"
+      aria-label="Carregando"
+    >
+      <span className="Loading__spinner" aria-hidden="true"></span>
     </div>
   );
 };

@@ -21,11 +21,11 @@ body {
   height: 100%;
   max-width: vw(100);
   scroll-behavior: smooth;
-  @include scrollbar(px(4), $secondary, $primary);
+  @include scrollbar(rem(4), $secondary, $primary);
 }
 
 body {
-  font-family: $font-poppins;
+  font-family: $font-inter;
   background: $background;
   position: relative;
   min-height: 100vh;

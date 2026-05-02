@@ -1,0 +1,89 @@
+@use '@/stylesheets/includes/Mixins' as *;
+@use '@/stylesheets/includes/Variables' as *;
+
+.Pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+  gap: rem(8);
+
+  @include respond-to($desktop) {
+    gap: rem(16);
+  }
+
+  &__btn {
+    width: rem(42);
+    height: rem(34);
+    background: $background;
+    border: rem(1) solid $figma-border;
+    border-radius: rem(10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: rem(8);
+    cursor: pointer;
+    transition:
+      border-color 0.2s,
+      color 0.2s;
+    padding: rem(8) rem(12);
+    font-family: $font-inter;
+
+    svg {
+      width: rem(16);
+      height: rem(16);
+    }
+
+    span {
+      display: none;
+    }
+
+    @include respond-to($desktop) {
+      width: auto;
+      height: rem(42);
+      padding: rem(9) rem(18);
+
+      span {
+        display: block;
+      }
+    }
+
+    &:hover:not(:disabled) {
+      border-color: $figma-text-primary;
+      color: $figma-text-primary;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__btn-label {
+    display: none;
+
+    @include respond-to($desktop) {
+      display: inline;
+    }
+  }
+
+  &__info {
+    text-align: center;
+  }
+
+  &__info-desktop {
+    display: none;
+
+    @include respond-to($desktop) {
+      display: inline;
+    }
+  }
+
+  &__info-mobile {
+    display: inline;
+
+    @include respond-to($desktop) {
+      display: none;
+    }
+  }
+}

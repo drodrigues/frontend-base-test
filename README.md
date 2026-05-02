@@ -354,3 +354,142 @@ Use para controle de estado assíncrono em hooks e componentes.
 ---
 
 > Commits granulares fazem parte da avaliação. Evite subir tudo em um único commit no final.
+
+---
+
+## Implementação
+
+Esta seção descreve o que foi entregue, as decisões técnicas tomadas e como a aplicação está estruturada.
+
+### Visão geral
+
+A aplicação consome os endpoints `GET /products` e `GET /products/search` da DummyJSON, exibe os produtos em um grid responsivo, permite busca em tempo real (com debounce) e pagina os resultados. Os estados de carregamento, erro e vazio são tratados explicitamente.
+
+### Domínio: `src/domains/product/`
+
+- **`types.ts`** — tipos `Product` e `ProductsResponse` derivados do contrato da DummyJSON.
+- **`ProductService.ts`** — classe estática com `list`, `search` e `getById`. Usa `apiFetch` de `@/core/HttpClient` com paths relativos (`/products?...`), aplica `encodeURIComponent` na busca e mantém `limit`/`skip` também no endpoint de search.
+- **`ProductStore.ts`** — store Zustand com `products`, `search`, `status` (`Status` global), `error`, `total` e `page`, além das ações `fetchProducts`, `searchProducts`, `setSearch` e `setPage`.
+
+A store é a única consumidora do `ProductService`. Os componentes nunca chamam o service diretamente.
+
+#### Proteção contra race conditions
+
+Buscas e paginações são concorrentes por natureza: o usuário pode digitar rápido ou trocar de página antes da resposta anterior voltar. Para lidar com isso, a store mantém um `latestRequestId` incremental. Cada chamada captura seu id antes do `await` e, quando a resposta chega, confere se ainda é o id mais recente. O `setSearch` também invalida requests pendentes assim que o termo muda, antes mesmo do debounce disparar a nova busca. Assim, respostas atrasadas são descartadas e não há risco de uma busca antiga sobrescrever o resultado da atual.
+
+### Camada HTTP
+
+`src/core/HttpClient.ts` expõe `apiFetch<T>(path, options)`, que recebe um path relativo e o prefixa com a base da DummyJSON (`https://dummyjson.com`). Também aceita URL absoluta, com retorno antecipado nesse caso. Erros HTTP são convertidos em `Error` com o status correspondente e propagados para a store tratar.
+
+Endpoints usados na implementação:
+
+```txt
+GET https://dummyjson.com/products?limit=20&skip=0
+GET https://dummyjson.com/products/search?q={query}&limit=20&skip=0
+GET https://dummyjson.com/products/{id}
+```
+
+### View: `src/views/home/`
+
+`HomeView` é um client component (`'use client'`) e orquestra:
+
+- **Fetch inicial** no `useEffect`.
+- **Busca com debounce de 400ms**, via `setTimeout` controlado por `useRef`. Quando o input fica vazio, a listagem completa é exibida novamente.
+- **Paginação** com scroll suave para o topo a cada troca de página.
+- **Retry** no estado de erro, que reutiliza a última intenção (busca ou listagem) na página atual.
+- **Skeletons** durante `loading` e `idle`, evitando o flash de conteúdo vazio.
+
+### Componentes criados
+
+Todos seguem `PascalCase/index.tsx + index.scss` e BEM nas classes.
+
+| Componente                 | Responsabilidade                                                                                                                                                                                 |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `ProductCard/index.tsx`    | Card do produto: imagem, badge de desconto, brand, nome, descrição (desktop), rating, stock e preço. Calcula preço original a partir de `discountPercentage`. Usa `next/image` para a thumbnail. |
+| `ProductCard/Skeleton.tsx` | Placeholder com shimmer animado via `@extend %skeleton-pulse`.                                                                                                                                   |
+| `SearchInput/index.tsx`    | Input controlado com ícone de busca e botão de clear. Usa componentes de ícone reutilizáveis.                                                                                                    |
+| `Pagination/index.tsx`     | Anterior/Próximo com label "Previous/Next" no desktop e apenas chevrons no mobile. Indicador `Page X of Y` (desktop) / `X / Y` (mobile).                                                         |
+| `icons/`                   | `SearchIcon`, `CloseIcon`, `StarIcon` extraídos do Figma como componentes React.                                                                                                                 |
+
+### Sistema de estilos
+
+As dimensões dos principais elementos visuais (cards, grid, espaçamentos, tipografia, raios, sombras e estados responsivos) seguem as medidas do Figma. Quando necessário, os valores foram adaptados para as funções SCSS do projeto (`rem`, `vw`, `dvh` e `font-size`), preservando a proporção visual do layout.
+
+#### Breakpoints adicionados
+
+O sistema base trazia `mobile`, `mobileHorizontal`, `tablet`, `desktop` e `not-desktop`. Em `src/stylesheets/includes/Mixins.scss` foram adicionados dois novos:
+
+- **`$mobile-wide`** — `(min-width: 448px)`: ativa o grid de 2 colunas no mobile, mantendo 1 coluna abaixo desse limite.
+- **`$desktop-wide`** — `(min-width: 1200px)`: força 4 colunas fixas de 294px no desktop largo.
+
+Os dois foram declarados como variáveis nomeadas para evitar números mágicos em media queries inline.
+
+#### Grid responsivo
+
+Mobile-first, com 4 níveis usando apenas variáveis do sistema:
+
+| Largura                     | Colunas               | Card       |
+| --------------------------- | --------------------- | ---------- |
+| `<448px` (base)             | 1 col centralizada    | `rem(206)` |
+| `≥448px` (`$mobile-wide`)   | 2 cols                | `rem(206)` |
+| `≥768px` (`$desktop`)       | `auto-fit` adaptativo | `rem(294)` |
+| `≥1200px` (`$desktop-wide`) | 4 cols fixas          | `rem(294)` |
+
+#### Unidades
+
+Seguindo o guia do projeto: `vw` e `dvh` para espaçamentos proporcionais no mobile (paddings, gaps); `rem` para dimensões fixas vindas do Figma (cards, ícones, borders, raios) e para o desktop. A tipografia usa `font-size()`, que é responsiva via `vw` no mobile e via `fluid-clamp` no desktop.
+
+#### Tema
+
+As variáveis SCSS apontam para CSS custom properties (`--primary`, `--background`, etc.) declaradas em `Themes.scss`. Tokens específicos do Figma (cinzas neutros, surface de imagem, badge, preço) foram adicionados seguindo o mesmo padrão: `$figma-text-primary`, `$figma-image-surface`, `$figma-price`, entre outros.
+
+Principais tokens adicionados:
+
+```scss
+$figma-surface
+$figma-image-surface
+$figma-border
+$figma-icon-muted
+$figma-text-primary
+$figma-text-body
+$figma-text-muted
+$figma-price
+$figma-badge
+```
+
+### Tipografia
+
+O componente `Typography` recebeu as props `size`, `lineHeight`, `sizeDesktop` e `lineHeightDesktop`, que são injetadas como CSS custom properties no inline style. Essa abordagem permite ter estilos diferentes entre mobile e desktop sem inflar o SCSS com uma classe por tamanho. Como o Figma traz variações de line-height entre estilos próximos, isso cobre todos os casos sem gerar uma explosão de combinações.
+
+### Constantes
+
+`src/constants/products.ts` exporta `PRODUCTS_PER_PAGE = 20`, atendendo ao exemplo do guia (`limit=20`).
+
+### Formatação monetária
+
+O `MoneyUtils.ts` ganhou a função `formatUSD`, já que a DummyJSON retorna os preços em dólares. O `formatBRL` foi mantido por compatibilidade com o utilitário base.
+
+### Melhorias de UX
+
+- **Ícone de close no `SearchInput`** (não previsto no Figma): com um clique, o termo digitado é limpo e a listagem completa volta a ser exibida, sem a necessidade de apagar caractere por caractere.
+- **Layout de 1 coluna em telas menores** (abaixo de 448px): adicionei um breakpoint extra para que, em dispositivos muito estreitos, os cards sejam exibidos em coluna única e centralizados, garantindo melhor legibilidade e aproveitamento do espaço em vez de espremer dois cards lado a lado.
+
+#### Possíveis evoluções futuras
+
+- **`cursor: pointer` no `ProductCard`**: como o card representa um produto, faria sentido sinalizar visualmente que ele é clicável e levar o usuário a uma página de detalhes. Como o escopo do teste e o design no Figma se limitam à listagem e à busca, essa interação não foi implementada nesta entrega, mas gostaria de deixar registrado como evolução.
+
+### Acessibilidade
+
+- `role="alert"` no estado de erro.
+- `aria-label` em ícones interativos (clear da busca, anterior/próxima página) e na navegação de paginação.
+- `aria-hidden="true"` nos ícones puramente decorativos (chevrons, dot separador, star quando dentro de bloco com texto).
+- Input de busca com `aria-label` e `type="search"`.
+
+### Build e qualidade
+
+- `yarn lint` passa limpo.
+- `yarn build` gera o output `standalone` sem erros.
+- Prettier configurado para padronização automática de estilo de código.
+- `yarn format` disponível para formatar o projeto.
+- `yarn format:check` disponível para validar formatação antes da entrega.
+- React Compiler ativo (`reactCompiler: true` em `next.config.ts`) — daí a opção por componentes funcionais sem `useMemo`/`useCallback` excessivos onde o compiler resolve.

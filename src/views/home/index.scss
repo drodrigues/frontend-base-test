@@ -1,1 +1,122 @@
-.HomeView {}
+@use '@/stylesheets/includes/Mixins' as *;
+@use '@/stylesheets/includes/Variables' as *;
+
+.HomeView {
+  display: flex;
+  width: 100%;
+  padding: dvh(2) 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: dvh(3);
+  flex-shrink: 0;
+  align-self: stretch;
+
+  @include respond-to($desktop) {
+    padding: rem(32) rem(16);
+    gap: rem(32);
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: dvh(1.5);
+    flex-shrink: 0;
+    align-self: stretch;
+
+    @include respond-to($desktop) {
+      min-height: rem(134);
+      justify-content: center;
+      gap: rem(16);
+    }
+  }
+
+  &__title {
+    letter-spacing: rem(0.0703);
+  }
+
+  &__count {
+    letter-spacing: rem(-0.3125);
+
+    @include respond-to($desktop) {
+      line-height: rem(24);
+    }
+  }
+
+  &__count-desktop {
+    display: none;
+
+    @include respond-to($desktop) {
+      display: inline;
+    }
+  }
+
+  &__count-mobile {
+    display: inline;
+
+    @include respond-to($desktop) {
+      display: none;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    width: 100%;
+    grid-template-columns: rem(206);
+    justify-content: center;
+    gap: vw(3);
+
+    @include respond-to($mobile-wide) {
+      grid-template-columns: repeat(2, rem(206));
+    }
+
+    @include respond-to($desktop) {
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, rem(294)), rem(294)));
+      justify-content: start;
+      gap: rem(24);
+    }
+
+    @include respond-to($desktop-wide) {
+      grid-template-columns: repeat(4, rem(294));
+    }
+  }
+
+  &__feedback {
+    display: flex;
+    width: 100%;
+    padding: dvh(6) vw(4);
+    flex-direction: column;
+    align-items: center;
+    gap: dvh(2);
+    text-align: center;
+
+    @include respond-to($desktop) {
+      width: 100%;
+      padding: rem(40) rem(24);
+      gap: rem(16);
+    }
+  }
+
+  &__retry {
+    border: rem(1) solid $primary;
+    border-radius: vw(1.5);
+    background: $primary;
+    color: $white;
+    cursor: pointer;
+    font-family: $font-inter;
+    font-weight: 600;
+    padding: dvh(1.5) vw(4);
+    @include font-size(12);
+    transition: opacity 0.2s;
+
+    @include respond-to($desktop) {
+      border-radius: rem(6);
+      padding: rem(10) rem(18);
+      @include font-size(13);
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}

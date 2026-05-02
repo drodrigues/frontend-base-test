@@ -31,9 +31,9 @@
   }
 
   &__spinner {
-    width: px(48);
-    height: px(48);
-    border: px(3) solid $secondary;
+    width: rem(48);
+    height: rem(48);
+    border: rem(3) solid $secondary;
     border-radius: 50%;
     display: inline-block;
     position: relative;
@@ -47,12 +47,13 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: px(56);
-      height: px(56);
+      width: rem(56);
+      height: rem(56);
       border-radius: 50%;
-      border: px(3) solid transparent;
+      border: rem(3) solid transparent;
       border-bottom-color: $primary;
     }
+
   }
 }
 

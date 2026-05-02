@@ -1,0 +1,93 @@
+@use '@/stylesheets/includes/Mixins' as *;
+@use '@/stylesheets/includes/Variables' as *;
+
+.SearchInput {
+  position: relative;
+  width: 100%;
+
+  @include respond-to($desktop) {
+    max-width: rem(448);
+  }
+
+  &__icon {
+    position: absolute;
+    left: rem(12);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    color: $figma-icon-muted;
+    pointer-events: none;
+
+    svg {
+      width: rem(16);
+      height: rem(16);
+
+      @include respond-to($desktop) {
+        width: rem(20);
+        height: rem(20);
+      }
+    }
+  }
+
+  &__field {
+    width: 100%;
+    height: rem(42);
+    border: rem(1) solid $figma-border;
+    border-radius: rem(10);
+    padding: rem(10) rem(40) rem(10) rem(36);
+    font-size: rem(14);
+    line-height: normal;
+    letter-spacing: rem(-0.1504);
+    color: $figma-text-primary;
+    background: $background;
+    outline: none;
+    font-family: $font-inter;
+    transition: border-color 0.2s;
+
+    @include respond-to($desktop) {
+      padding-left: rem(40);
+      font-size: rem(16);
+      letter-spacing: rem(-0.3125);
+    }
+
+    &::placeholder {
+      color: $figma-icon-muted;
+    }
+
+    &:focus {
+      border-color: $figma-text-primary;
+    }
+
+    &::-webkit-search-cancel-button {
+      -webkit-appearance: none;
+    }
+  }
+
+  &__clear {
+    position: absolute;
+    right: rem(12);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: rem(20);
+    height: rem(20);
+    padding: 0;
+    border: 0;
+    color: $figma-icon-muted;
+    background: transparent;
+    cursor: pointer;
+
+    svg {
+      width: rem(16);
+      height: rem(16);
+
+      @include respond-to($desktop) {
+        width: rem(20);
+        height: rem(20);
+      }
+    }
+  }
+}

@@ -30,7 +30,11 @@ const LayoutContainer = ({
   const Component = type;
 
   return (
-    <Component id={id} className={classNames('LayoutContainer', className)} role={role}>
+    <Component
+      id={id}
+      className={classNames('LayoutContainer', `LayoutContainer--${type}`, className)}
+      role={role}
+    >
       <div
         className={classNames(
           'LayoutContainer__content',
@@ -39,7 +43,8 @@ const LayoutContainer = ({
             'LayoutContainer__content--full': fullContent,
           },
           contentClassName,
-        )}>
+        )}
+      >
         {isLoading ? <Loading visible fitToParent /> : children}
       </div>
     </Component>
