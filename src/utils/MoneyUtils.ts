@@ -4,3 +4,11 @@ export function formatBRL(value: number): string {
     currency: 'BRL',
   }).format(value);
 }
+
+export function formatUSD(value: number): string {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 2,
+  }).format(value);
+}

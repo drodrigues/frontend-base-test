@@ -1,7 +1,7 @@
-import { buildAppUrl } from '@/utils/UrlUtils';
+const API_BASE_URL = 'https://dummyjson.com';
 
 export async function apiFetch<T = unknown>(path: string, options?: RequestInit): Promise<T> {
-  const url = buildAppUrl(path);
+  const url = path.startsWith('http') ? path : `${API_BASE_URL}${path}`;
 
   const res = await fetch(url, {
     ...options,
